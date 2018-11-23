@@ -1,10 +1,10 @@
 package com.example.lw.learnkotlin
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created on 2018/11/22.
@@ -19,7 +19,7 @@ class ForecastListAdapter(private val arrays: List<Person>) : RecyclerView.Adapt
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): VH = VH(LayoutInflater.from(p0.context).inflate(R.layout.layout_adapter, p0, false))
 
-    inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class VH(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         var tv: TextView = itemView.findViewById(R.id.tv) as TextView
 
