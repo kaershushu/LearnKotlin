@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val items = listOf("1","2","3")
+    private val items: ArrayList<Person> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +18,19 @@ class MainActivity : AppCompatActivity() {
         val recycler = findViewById(R.id.recycler) as RecyclerView
 
         recycler.layoutManager = LinearLayoutManager(this)
+
+        val p1 = Person()
+        val p2 = Person()
+        val p3 = Person()
+
+        p1.name = "elsa"
+        p2.name = "eva"
+        p3.name = "tina"
+
+
+        items.add(p1)
+        items.add(p2)
+        items.add(p3)
 
         val adapter = ForecastListAdapter(items)
 

@@ -10,9 +10,9 @@ import android.widget.TextView
  * Created on 2018/11/22.
  * @author Alan
  */
-class ForecastListAdapter(private val arrays: List<String>) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
+class ForecastListAdapter(private val arrays: List<Person>) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
     override fun onBindViewHolder(p0: VH, p1: Int) {
-        p0.tv.text = arrays[p1]
+        p0.tv.text = arrays[p1].name
     }
 
     override fun getItemCount(): Int = arrays.size
