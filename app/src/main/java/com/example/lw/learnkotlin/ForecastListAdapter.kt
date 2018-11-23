@@ -5,12 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.lw.learnkotlin.bean.Forecast
 
 /**
  * Created on 2018/11/22.
  * @author Alan
  */
-class ForecastListAdapter(private val arrays: List<Weather>) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
+class ForecastListAdapter(private val arrays: List<Forecast>) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
     override fun onBindViewHolder(p0: VH, p1: Int) {
         p0.tv.text = arrays[p1].name
     }

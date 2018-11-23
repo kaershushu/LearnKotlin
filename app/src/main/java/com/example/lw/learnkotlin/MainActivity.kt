@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.jetbrains.anko.find
 import android.widget.Toast
+import com.example.lw.learnkotlin.bean.Forecast
 import com.example.lw.learnkotlin.request.LocalStrategy
-import com.example.lw.learnkotlin.request.OpenWeatherMapStrategy
 import com.example.lw.learnkotlin.request.RequestImpl
 import com.orhanobut.logger.Logger
 import org.jetbrains.anko.doAsyncResult
@@ -18,7 +18,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val mItems: ArrayList<Weather> = ArrayList()
+    private val mItems: ArrayList<Forecast> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +40,9 @@ class MainActivity : AppCompatActivity() {
 
         recycler.layoutManager = LinearLayoutManager(this)
 
-        val p1 = Weather(Date(), 22.0f,"sunny")
-        val p2 = Weather(Date(), 16f, "rainy")
-        val p3 = Weather(Date(), 23f,"sunny")
+        val p1 = Forecast(Date(), 22.0f, "sunny")
+        val p2 = Forecast(Date(), 16f, "rainy")
+        val p3 = Forecast(Date(), 23f, "sunny")
 
         mItems.add(p1)
         mItems.add(p2)
