@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
  * Created on 2018/11/22.
  * @author Alan
  */
-class ForecastListAdapter(private val arrays: List<Person>) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
+class ForecastListAdapter(private val arrays: List<Weather>) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
     override fun onBindViewHolder(p0: VH, p1: Int) {
         p0.tv.text = arrays[p1].name
     }

@@ -1,39 +1,61 @@
 package com.example.lw.learnkotlin
 
+import android.content.Context
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.jetbrains.anko.find
+import android.widget.Toast
+import com.example.lw.learnkotlin.request.LocalStrategy
+import com.example.lw.learnkotlin.request.OpenWeatherMapStrategy
+import com.example.lw.learnkotlin.request.RequestImpl
+import com.orhanobut.logger.Logger
+import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.uiThread
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val items: ArrayList<Person> = ArrayList()
+    private val mItems: ArrayList<Weather> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // as 用于转型
-        val recycler = findViewById(R.id.recycler) as RecyclerView
+        val recycler = findViewById<RecyclerView>(R.id.recycler)
+        val button = find<Button>(R.id.btn)
+
+        button.setOnClickListener {
+            doAsyncResult{
+                val json = RequestImpl().request(LocalStrategy())
+                Logger.d(json)
+                uiThread {
+                    toast("request performed")
+                }
+            }
+        }
 
         recycler.layoutManager = LinearLayoutManager(this)
 
-        val p1 = Person()
-        val p2 = Person()
-        val p3 = Person()
+        val p1 = Weather(Date(), 22.0f,"sunny")
+        val p2 = Weather(Date(), 16f, "rainy")
+        val p3 = Weather(Date(), 23f,"sunny")
 
-        p1.name = "elsa"
-        p2.name = "eva"
-        p3.name = "tina"
+        mItems.add(p1)
+        mItems.add(p2)
+        mItems.add(p3)
 
-
-        items.add(p1)
-        items.add(p2)
-        items.add(p3)
-
-        val adapter = ForecastListAdapter(items)
+        val adapter = ForecastListAdapter(mItems)
 
         recycler.adapter = adapter
 
     }
+
+    private fun Context.toast(msg:String){
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
+    }
+
 }
