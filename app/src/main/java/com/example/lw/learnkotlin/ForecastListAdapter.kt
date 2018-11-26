@@ -13,7 +13,7 @@ import com.example.lw.learnkotlin.bean.Forecast
  */
 class ForecastListAdapter(private val arrays: List<Forecast>) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
     override fun onBindViewHolder(p0: VH, p1: Int) {
-        p0.tv.text = arrays[p1].name
+        p0.tv.text = arrays[p1].toString()
     }
 
     override fun getItemCount(): Int = arrays.size

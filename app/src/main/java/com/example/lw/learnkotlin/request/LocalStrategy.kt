@@ -8,8 +8,10 @@ import java.net.URL
  */
 class LocalStrategy : RequestStrategy {
 
-    val cityId = "101020100"
-    val url = "http://t.weather.sojson.com/api/weather/city/$cityId"
+    companion object {
+        private const val cityId = "101020100"
+        const val url = "http://t.weather.sojson.com/api/weather/city/$cityId"
+    }
 
     override fun request(): String = URL(url).readText()
 }
