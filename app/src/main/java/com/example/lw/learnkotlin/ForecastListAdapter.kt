@@ -7,13 +7,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lw.learnkotlin.domin.ForecastList
+import com.example.lw.learnkotlin.domin.model.Forecast
 import org.jetbrains.anko.find
 
 /**
  * Created on 2018/11/22.
  * @author Alan
  */
-class ForecastListAdapter(private val forecastList: ForecastList,private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
+class ForecastListAdapter(private val forecastList: ForecastList, private val onItemClickListener: (Forecast) -> Unit) :
+    RecyclerView.Adapter<ForecastListAdapter.VH>() {
     override fun onBindViewHolder(holder: VH, position: Int) {
         with(forecastList[position]) {
             holder.dateView.text = date
@@ -26,7 +28,8 @@ class ForecastListAdapter(private val forecastList: ForecastList,private val onI
     override fun onCreateViewHolder(holder: ViewGroup, position: Int): VH =
         VH(LayoutInflater.from(holder.ctx).inflate(R.layout.layout_adapter, holder, false), onItemClickListener)
 
-    inner class VH(itemView: View, onItemClickListener: OnItemClickListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    inner class VH(itemView: View, onItemClickListener: (Forecast) -> Unit) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
         private val iconView: ImageView
         val dateView: TextView

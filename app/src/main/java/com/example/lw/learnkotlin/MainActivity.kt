@@ -28,11 +28,9 @@ class MainActivity : AppCompatActivity() {
 
             uiThread {
                 recycler.layoutManager = LinearLayoutManager(this@MainActivity)
-                recycler.adapter = ForecastListAdapter(forecastResult,object: ForecastListAdapter.OnItemClickListener{
-                    override fun invoke(forecast: com.example.lw.learnkotlin.domin.model.Forecast) {
-                        toast(forecast.date)
-                    }
-                })
+                recycler.adapter = ForecastListAdapter(forecastResult) {
+                    toast(it.date)
+                }
             }
             Logger.d(json)
             uiThread {
@@ -44,5 +42,4 @@ class MainActivity : AppCompatActivity() {
     private fun Context.toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
-
 }
