@@ -3,34 +3,47 @@ package com.example.lw.learnkotlin
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lw.learnkotlin.domin.ForecastList
+import org.jetbrains.anko.find
 
 /**
  * Created on 2018/11/22.
  * @author Alan
  */
-class ForecastListAdapter(private val forecastList: ForecastList) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
-    override fun onBindViewHolder(p0: VH, p1: Int) {
-        p0.tv.text = forecastList.dailyForecast[p1].description
-        p0.tvTemp.text = forecastList.dailyForecast[p1].high.toString()
-
-        with(forecastList.dailyForecast[p1]) {
-            p0.tv.text = "$date"
-            p0.tvTemp.text = "$description"
+class ForecastListAdapter(private val forecastList: ForecastList,private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ForecastListAdapter.VH>() {
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        with(forecastList[position]) {
+            holder.dateView.text = date
+            holder.descriptionView.text = description
         }
     }
 
-    override fun getItemCount(): Int = forecastList.dailyForecast.size
+    override fun getItemCount(): Int = forecastList.size()
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): VH = VH(LayoutInflater.from(p0.context).inflate(R.layout.layout_adapter, p0, false))
+    override fun onCreateViewHolder(holder: ViewGroup, position: Int): VH =
+        VH(LayoutInflater.from(holder.ctx).inflate(R.layout.layout_adapter, holder, false), onItemClickListener)
 
-    inner class VH(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    inner class VH(itemView: View, onItemClickListener: OnItemClickListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
-        var tv: TextView = itemView.findViewById(R.id.tv) as TextView
+        private val iconView: ImageView
+        val dateView: TextView
+        val descriptionView: TextView
+        private val maxTemperatureView: TextView
+        private val minTemperatureView: TextView
 
-        var tvTemp: TextView = itemView.findViewById(R.id.tv_temp) as TextView
+        init {
+            iconView = itemView.find(R.id.icon)
+            dateView = itemView.find(R.id.date)
+            descriptionView = itemView.find(R.id.description)
+            maxTemperatureView = itemView.find(R.id.maxTemperature)
+            minTemperatureView = itemView.find(R.id.minTemperature)
+        }
+    }
 
+    public interface OnItemClickListener {
+        operator fun invoke(forecast: com.example.lw.learnkotlin.domin.model.Forecast)
     }
 }

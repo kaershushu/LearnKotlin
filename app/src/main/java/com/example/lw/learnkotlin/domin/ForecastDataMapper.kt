@@ -19,7 +19,7 @@ public class ForecastDataMapper {
     }
 
     private fun convertForecastItemToDomain(forecast: com.example.lw.learnkotlin.bean.Forecast): ModelForecast {
-        return ModelForecast(convertDate(forecast.dt), forecast.weather[0].description, forecast.temperature.max.toInt(), forecast.temperature.min.toInt())
+        return ModelForecast(convertDate(forecast.dt), forecast.weather[0].description, forecast.temperature.max.toInt(), forecast.temperature.min.toInt(), generateUrl(forecast.weather[0].icon))
     }
 
     private fun convertDate(date: Long): String {
@@ -27,4 +27,5 @@ public class ForecastDataMapper {
         return df.format(date * 1000)
     }
 
+    private fun generateUrl(iconCode:String):String = "http://openweathermap.org/img/w/$iconCode.png"
 }

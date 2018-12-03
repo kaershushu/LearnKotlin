@@ -2,21 +2,16 @@ package com.example.lw.learnkotlin
 
 import android.content.Context
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.lw.learnkotlin.bean.Forecast
-import com.example.lw.learnkotlin.bean.ForecastResult
 import com.example.lw.learnkotlin.domin.ForecastDataMapper
 import com.example.lw.learnkotlin.request.OpenWeatherMapStrategy
 import com.example.lw.learnkotlin.request.RequestImpl
 import com.orhanobut.logger.Logger
 import org.jetbrains.anko.doAsyncResult
-import org.jetbrains.anko.find
 import org.jetbrains.anko.uiThread
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,7 +28,11 @@ class MainActivity : AppCompatActivity() {
 
             uiThread {
                 recycler.layoutManager = LinearLayoutManager(this@MainActivity)
-                recycler.adapter = ForecastListAdapter(forecastResult)
+                recycler.adapter = ForecastListAdapter(forecastResult,object: ForecastListAdapter.OnItemClickListener{
+                    override fun invoke(forecast: com.example.lw.learnkotlin.domin.model.Forecast) {
+                        toast(forecast.date)
+                    }
+                })
             }
             Logger.d(json)
             uiThread {
