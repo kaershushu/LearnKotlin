@@ -10,6 +10,7 @@ import com.example.lw.learnkotlin.domin.ForecastDataMapper
 import com.example.lw.learnkotlin.request.OpenWeatherMapStrategy
 import com.example.lw.learnkotlin.request.RequestImpl
 import com.orhanobut.logger.Logger
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsyncResult
 import org.jetbrains.anko.uiThread
 
@@ -20,14 +21,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // as 用于转型
-        val recycler = findViewById<RecyclerView>(R.id.recycler)
+        val recycler = findViewById<RecyclerView>(R.id.forecastList)
+        forecastList.layoutManager = LinearLayoutManager(this@MainActivity)
 
         doAsyncResult {
             val json = RequestImpl().execute(OpenWeatherMapStrategy("94043"))
             val forecastResult = ForecastDataMapper().convertFromDataModel(json)
 
             uiThread {
-                recycler.layoutManager = LinearLayoutManager(this@MainActivity)
                 recycler.adapter = ForecastListAdapter(forecastResult) {
                     toast(it.date)
                 }

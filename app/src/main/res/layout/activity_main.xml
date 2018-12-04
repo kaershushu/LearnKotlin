@@ -8,7 +8,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+        android:id="@+id/forecastList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -19,6 +19,6 @@
         android:layout_gravity="right"
         android:gravity="center"
         android:text="button"
-        app:layout_constraintTop_toBottomOf="@+id/recycler" />
+        app:layout_constraintTop_toBottomOf="@+id/forecastList" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

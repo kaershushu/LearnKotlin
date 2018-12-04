@@ -6,7 +6,7 @@ import java.net.URL
  * Created on 2018/11/23.
  * @author Alan
  */
-class OpenWeatherMapStrategy(val zipCode: String) : RequestStrategy {
+class OpenWeatherMapStrategy(private val zipCode: String) : RequestStrategy {
 
     // http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&units=metric&cnt=7&APPID=15646a06818f61f7b8d7823ca833e1ce&zip=94043
     companion object {
