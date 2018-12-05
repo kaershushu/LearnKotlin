@@ -12,7 +12,7 @@ import com.orhanobut.logger.Logger
 class App : Application() {
 
     companion object {
-        private var instance: Application by DelegatesExt.notNullSingleValue()
+        var instance: Application by DelegatesExt.notNullSingleValue()
     }
 
     override fun onCreate() {

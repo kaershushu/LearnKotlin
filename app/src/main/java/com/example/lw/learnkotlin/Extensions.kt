@@ -2,6 +2,8 @@ package com.example.lw.learnkotlin
 
 import android.content.Context
 import android.view.View
+import org.jetbrains.anko.db.MapRowParser
+import org.jetbrains.anko.db.SelectQueryBuilder
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -33,14 +35,14 @@ object DelegatesExt {
 
 //数据库里各个元素的object
 
-object CityForecastTable{
+object CityForecastTable {
     val NAME = "CityForecast"
     val ID = "_id"
     val CITY = "city"
     val COUNTRY = "country"
 }
 
-object DayForecastTable{
+object DayForecastTable {
     val NAME = "DayForecast"
     val ID = "_id"
     val DATE = "date"
@@ -50,3 +52,12 @@ object DayForecastTable{
     val ICON_URL = "iconUrl"
     val CITY_ID = "cityId"
 }
+
+//lambda配合扩展函数
+fun <T : Any> SelectQueryBuilder.parseList(parser: (Map<String, Any?>) -> T): List<T> = parseList(object : MapRowParser<T> {
+    override fun parseRow(columns: Map<String, Any?>): T = parser(columns)
+})
+
+fun <T : Any> SelectQueryBuilder.parseOpt(parser: (Map<String, Any?>) -> T): T? = parseOpt(object : MapRowParser<T> {
+    override fun parseRow(columns: Map<String, Any?>): T = parser(columns)
+})
