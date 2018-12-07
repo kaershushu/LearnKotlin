@@ -1,11 +1,10 @@
 package com.example.lw.learnkotlin.data.db
 
-import com.example.lw.learnkotlin.CityForecastTable
-import com.example.lw.learnkotlin.DayForecastTable
+import android.database.sqlite.SQLiteDatabase
+import com.example.lw.learnkotlin.*
+import com.example.lw.learnkotlin.domin.ForecastList
 import com.example.lw.learnkotlin.domin.model.CityForecast
 import com.example.lw.learnkotlin.domin.model.DayForecast
-import com.example.lw.learnkotlin.parseList
-import com.example.lw.learnkotlin.parseOpt
 import org.jetbrains.anko.db.select
 
 /**
@@ -25,4 +24,19 @@ class ForecastDb(val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.insta
         }
         city
     }
+
+    fun saveForecast(forecast: ForecastList) = forecastDbHelper.use {
+        clear(CityForecastTable.NAME)
+        clear(DayForecastTable.NAME)
+
+        with(dataMapper.convertFromDomain(forecast)) {
+            insert(CityForecastTable.NAME, *map.toVarargArray())
+        }
+    }
+
+    fun SQLiteDatabase.clear(tableName: String) {
+        execSQL("delete from $tableName")
+    }
+
+
 }
