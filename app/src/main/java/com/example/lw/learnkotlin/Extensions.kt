@@ -18,7 +18,7 @@ import kotlin.reflect.KProperty
 val View.ctx: Context
     get() = context
 
-//设置NotNull委托，保证在使用的时候不为空，为空的话则跑出异常
+//设置NotNull委托，保证在使用的时候不为空，为空的话则抛出异常
 private class NotNullSingleValueVar<T : Any> : ReadWriteProperty<Any?, T> {
     private var value: T? = null
 
@@ -72,3 +72,13 @@ fun SQLiteDatabase.clear(tableName: String) {
 fun saveForecast(forecast: ForecastList) = ForecastDbHelper
 
 fun <K, V : Any> MutableMap<K, V?>.toVarargArray(): Array<out Pair<K, V>> = map { Pair(it.key, it.value!!) }.toTypedArray()
+
+inline fun <T, R : Any> Iterable<T>.firstResult(predicate:(T)-> R?):R{
+    for(element in this){
+        val result = predicate(element)
+        if (result != null) return result
+    }
+    throw NoSuchElementException("No elment matching predicate was found.")
+}
+
+fun SelectQueryBuilder.byId(id:Long):SelectQueryBuilder = whereSimple("_id = ?", id.toString())

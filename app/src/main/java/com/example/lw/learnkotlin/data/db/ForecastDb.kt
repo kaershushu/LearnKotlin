@@ -5,6 +5,9 @@ import com.example.lw.learnkotlin.*
 import com.example.lw.learnkotlin.domin.ForecastList
 import com.example.lw.learnkotlin.domin.model.CityForecast
 import com.example.lw.learnkotlin.domin.model.DayForecast
+import com.example.lw.learnkotlin.domin.model.Forecast
+import com.example.lw.learnkotlin.request.ForecastDataSource
+import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 
 /**
@@ -12,17 +15,28 @@ import org.jetbrains.anko.db.select
  * @author Alan
  */
 class ForecastDb(val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.instance,
-                 val dataMapper: DbDataMapper = DbDataMapper()) {
+                 val dataMapper: DbDataMapper = DbDataMapper()) : ForecastDataSource {
 
 
-    fun requestForecastByZipcode(zipCode: Long, date: Long) = forecastDbHelper.use {
+    override fun requestForecastByZipCode(zipCode: Long, date: Long): ForecastList? = forecastDbHelper.use {
         val dailyRequest = "${DayForecastTable.CITY_ID} = ? " + "AND ${DayForecastTable.DATE} >= ?"
         val dailyForecast = select(DayForecastTable.NAME).whereArgs(dailyRequest, "id" to zipCode, "date" to date)
                 .parseList { DayForecast(HashMap(it)) }
-        val city = select(CityForecastTable.NAME).whereSimple("${CityForecastTable.ID} = ? ", zipCode.toString()).parseOpt {
-            CityForecast(HashMap(it), dailyForecast)
+
+        val city = select(CityForecastTable.NAME)
+                .whereSimple("${CityForecastTable.ID} = ? ", zipCode.toString())
+                .parseOpt { CityForecast(HashMap(it), dailyForecast) }
+
+        city?.let {
+            dataMapper.convertToDomain(city)
         }
-        city
+    }
+
+    override fun requestDayForecast(id: Long): Forecast? = forecastDbHelper.use{
+        val forecast = select(DayForecastTable.NAME).byId(id).parseOpt{
+            DayForecast(HashMap(it))
+        }
+        if (forecast != null) dataMapper.convertDayToDomain(forecast) else null
     }
 
     fun saveForecast(forecast: ForecastList) = forecastDbHelper.use {
@@ -31,6 +45,9 @@ class ForecastDb(val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.insta
 
         with(dataMapper.convertFromDomain(forecast)) {
             insert(CityForecastTable.NAME, *map.toVarargArray())
+            dailyForecast.forEach {
+                insert(DayForecastTable.NAME, *it.map.toVarargArray())
+            }
         }
     }
 

@@ -9,7 +9,7 @@ import java.util.*
 public class ForecastDataMapper {
 
     fun convertFromDataModel(forecast: ForecastResult): ForecastList {
-        return ForecastList(forecast.city.name, forecast.city.country, convertForecastListToDomain(forecast.list))
+        return ForecastList(forecast.city.id, forecast.city.name, forecast.city.country, convertForecastListToDomain(forecast.list))
     }
 
     private fun convertForecastListToDomain(list: List<Forecast>): List<ModelForecast> {
@@ -27,5 +27,5 @@ public class ForecastDataMapper {
         return df.format(date * 1000)
     }
 
-    private fun generateUrl(iconCode:String):String = "http://openweathermap.org/img/w/$iconCode.png"
+    private fun generateUrl(iconCode: String): String = "http://openweathermap.org/img/w/$iconCode.png"
 }

@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lw.learnkotlin.domin.ForecastDataMapper
+import com.example.lw.learnkotlin.request.ForecastProvider
 import com.example.lw.learnkotlin.request.OpenWeatherMapStrategy
+import com.example.lw.learnkotlin.request.RequestFourecastCommand
 import com.example.lw.learnkotlin.request.RequestImpl
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,22 +27,13 @@ class MainActivity : AppCompatActivity() {
         forecastList.layoutManager = LinearLayoutManager(this@MainActivity)
 
         doAsyncResult {
-            val json = RequestImpl().execute(OpenWeatherMapStrategy("94043"))
-            val forecastResult = ForecastDataMapper().convertFromDataModel(json)
-
-            uiThread {
-                recycler.adapter = ForecastListAdapter(forecastResult) {
-                    toast(it.date)
-                }
-            }
-            Logger.d(json)
-            uiThread {
-                toast("request performed")
-            }
+            val request = RequestFourecastCommand(94043, ForecastProvider())
+            val forecastList = request.execute(OpenWeatherMapStrategy())
         }
     }
 
     private fun Context.toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
+
 }
