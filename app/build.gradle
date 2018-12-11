@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.example.lw.learnkotlin"
         minSdkVersion 15
         targetSdkVersion 28
@@ -12,14 +13,45 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    apply from: "$rootDir/ktlint.gradle"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    //Error: Program type already present: org.jetbrains.annotations.Nls
+    configurations {
+        cleanedAnnotations
+        compile.exclude group: 'org.jetbrains', module: 'annotations'
+    }
+
+    //More than one file was found with OS independent path
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/metadata.kotlin_module'
+        exclude 'META-INF/descriptors.kotlin_module'
+        exclude 'META-INF/metadata.jvm.kotlin_module'
+        exclude 'META-INF/deserialization.kotlin_module'
+        exclude 'META-INF/**kotlin**'
+        exclude '**/kotlin/**'
+    }
 }
+
+apply from: "$rootDir/ktlint.gradle"
 
 
 dependencies {
@@ -37,4 +69,5 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.4'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    annotationProcessor "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlin_version"
 }

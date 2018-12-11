@@ -5,5 +5,5 @@ package com.example.lw.learnkotlin.request
  * @author Alan
  */
 interface Request<T> {
-    fun execute(strategy: RequestStrategy):T
+    fun execute(): T
 }

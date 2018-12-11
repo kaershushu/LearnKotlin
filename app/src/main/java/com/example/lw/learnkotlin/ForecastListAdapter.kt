@@ -39,7 +39,7 @@ class ForecastListAdapter(private val forecastList: ForecastList, private val on
         fun bindForecast(forecast: Forecast) {
             with(forecast) {
                 Picasso.get().load(iconUrl).into(iconView)
-                dateView.text = date
+                dateView.text = forecast.date.toString()
                 descriptionView.text = description
                 maxTemperatureView.text = "$high"
                 minTemperatureView.text = "$low"
@@ -48,7 +48,7 @@ class ForecastListAdapter(private val forecastList: ForecastList, private val on
         }
     }
 
-    public interface OnItemClickListener {
+    interface OnItemClickListener {
         operator fun invoke(forecast: Forecast)
     }
 }

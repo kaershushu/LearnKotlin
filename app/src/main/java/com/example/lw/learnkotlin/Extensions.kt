@@ -1,12 +1,17 @@
 package com.example.lw.learnkotlin
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.example.lw.learnkotlin.data.db.ForecastDbHelper
 import com.example.lw.learnkotlin.domin.ForecastList
 import org.jetbrains.anko.db.MapRowParser
 import org.jetbrains.anko.db.SelectQueryBuilder
+import java.text.DateFormat
+import java.util.*
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -69,16 +74,29 @@ fun SQLiteDatabase.clear(tableName: String) {
     execSQL("delete from $tableName")
 }
 
-fun saveForecast(forecast: ForecastList) = ForecastDbHelper
-
 fun <K, V : Any> MutableMap<K, V?>.toVarargArray(): Array<out Pair<K, V>> = map { Pair(it.key, it.value!!) }.toTypedArray()
 
-inline fun <T, R : Any> Iterable<T>.firstResult(predicate:(T)-> R?):R{
-    for(element in this){
+inline fun <T, R : Any> Iterable<T>.firstResult(predicate: (T) -> R?): R {
+    for (element in this) {
         val result = predicate(element)
         if (result != null) return result
     }
     throw NoSuchElementException("No elment matching predicate was found.")
 }
 
-fun SelectQueryBuilder.byId(id:Long):SelectQueryBuilder = whereSimple("_id = ?", id.toString())
+fun SelectQueryBuilder.byId(id: Long): SelectQueryBuilder = whereSimple("_id = ?", id.toString())
+
+fun Long.toDateString(dateFormat: Int = DateFormat.MEDIUM): String {
+    val df = DateFormat.getDateInstance(dateFormat, Locale.getDefault())
+    return df.format(this)
+}
+
+fun Context.color(res: Int) = ContextCompat.getColor(this, res)
+
+inline fun <reified T:Activity>Context.startActivity(vararg params: Pair<String, String>) {
+    val intent = Intent(this, T::class.java)
+    params.forEach{
+        intent.putExtra(it.first, it.second)
+    }
+    startActivity(intent)
+}

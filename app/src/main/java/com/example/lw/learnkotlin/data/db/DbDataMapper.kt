@@ -11,7 +11,7 @@ import com.example.lw.learnkotlin.domin.model.Forecast
  */
 class DbDataMapper {
 
-    fun convertToDomain(forecast: CityForecast):ForecastList? = with(forecast) {
+    fun convertToDomain(forecast: CityForecast): ForecastList? = with(forecast) {
         val daily = dailyForecast.map {
             convertDayToDomain(it)
         }
@@ -19,7 +19,7 @@ class DbDataMapper {
     }
 
     fun convertDayToDomain(dayForecast: DayForecast) = with(dayForecast) {
-        Forecast(_id,date.toString(), description, high, low, iconUrl)
+        Forecast(_id, date, description, high, low, iconUrl)
     }
 
     fun convertFromDomain(forecast: ForecastList) = with(forecast) {
