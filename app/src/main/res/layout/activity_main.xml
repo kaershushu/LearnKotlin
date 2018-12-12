@@ -6,19 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <include
+        layout="@layout/layout_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/forecastList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:gravity="center"
-        android:text="button"
-        app:layout_constraintTop_toBottomOf="@+id/forecastList" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

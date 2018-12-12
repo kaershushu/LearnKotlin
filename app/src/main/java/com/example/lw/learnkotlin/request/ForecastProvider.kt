@@ -9,7 +9,7 @@ import com.example.lw.learnkotlin.firstResult
  * Created on 2018/12/10.
  * @author Alan
  */
-class ForecastProvider(val sources: List<ForecastDataSource> = SOURCES) {
+class ForecastProvider(private val sources: List<ForecastDataSource> = SOURCES) {
 
     companion object {
         const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
@@ -30,7 +30,7 @@ class ForecastProvider(val sources: List<ForecastDataSource> = SOURCES) {
 
     fun requestByZipCode(zipCode: Long, days: Int): ForecastList = requestToSources {
         val res = it.requestForecastByZipCode(zipCode, todayTimeSpan())
-        if (res != null && res.size() > days) res else null
+        if (res != null && res.size() >= days) res else null
     }
 
     private fun <T : Any> requestToSources(f: (ForecastDataSource) -> T?): T = sources.firstResult(f)

@@ -81,7 +81,7 @@ inline fun <T, R : Any> Iterable<T>.firstResult(predicate: (T) -> R?): R {
         val result = predicate(element)
         if (result != null) return result
     }
-    throw NoSuchElementException("No elment matching predicate was found.")
+    throw NoSuchElementException("No element matching predicate was found.")
 }
 
 fun SelectQueryBuilder.byId(id: Long): SelectQueryBuilder = whereSimple("_id = ?", id.toString())
@@ -99,4 +99,12 @@ inline fun <reified T:Activity>Context.startActivity(vararg params: Pair<String,
         intent.putExtra(it.first, it.second)
     }
     startActivity(intent)
+}
+
+fun View.slideExit(){
+    if (translationY == 0f) animate().translationY(-height.toFloat())
+}
+
+fun View.slideEnter(){
+    if (translationY < 0f) animate().translationY(0f)
 }
