@@ -3,15 +3,22 @@ package com.example.lw.learnkotlin
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.example.lw.learnkotlin.domin.model.Forecast
 import com.example.lw.learnkotlin.request.RequestDayForecastCommand
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
+import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.find
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.uiThread
 import java.text.DateFormat
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), ToolbarManager {
+    override val toolbar: Toolbar by lazy {
+        find<Toolbar>(R.id.toolbar)
+    }
 
     companion object {
         const val CITY_NAME = "city_name"
@@ -23,17 +30,25 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         val title = intent.getStringExtra(CITY_NAME)
         val id = intent.getLongExtra(CITY_ID, 0)
-        setTitle(title)
         doAsync {
+            val result = bg{RequestDayForecastCommand(id).execute()}
             with(RequestDayForecastCommand(id).execute()) {
                 uiThread {
-                    supportActionBar!!.subtitle = date.toDateString(DateFormat.FULL)
-                    bindWeather(high to maxTemperature, low to minTemperature)
-                    tvweatherdescription.text = description
-                    Picasso.get().load(iconUrl).into(icon)
+
                 }
             }
+            bindForecast(result.await())
         }
+        initToolbar()
+        toolbarTitle = title
+        enableHomeUp { onBackPressed() }
+    }
+
+    private fun bindForecast(forecast: Forecast) {
+        supportActionBar!!.subtitle = forecast.date.toDateString(DateFormat.FULL)
+        bindWeather(forecast.high to maxTemperature, forecast.low to minTemperature)
+        tvweatherdescription.text = forecast.description
+        Picasso.get().load(forecast.iconUrl).into(icon)
     }
 
     private fun bindWeather(vararg views: Pair<Int, TextView>) = views.forEach {

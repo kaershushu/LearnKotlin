@@ -33,11 +33,13 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
                     startActivity<DetailActivity>(DetailActivity.CITY_ID to result.id, DetailActivity.CITY_NAME to result.city)
                 }
                 recycler.adapter = adapter
+
+                initToolbar()
+                toolbarTitle = result.city
+                attachToScroll(recycler)
             }
         }
-        initToolbar()
-        enableHomeUp { finish() }
-        attachToScroll(recycler)
+
     }
 
 }

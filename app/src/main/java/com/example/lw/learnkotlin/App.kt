@@ -1,6 +1,7 @@
 package com.example.lw.learnkotlin
 
 import android.app.Application
+import com.facebook.stetho.Stetho
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 
@@ -18,6 +19,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Stetho.initializeWithDefaults(instance)
         Logger.addLogAdapter(AndroidLogAdapter())
     }
 
