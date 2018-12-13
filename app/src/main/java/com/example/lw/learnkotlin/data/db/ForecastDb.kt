@@ -14,21 +14,22 @@ import org.jetbrains.anko.db.select
  * Created on 2018/12/5.
  * @author Alan
  */
-class ForecastDb(val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.instance,
-                 val dataMapper: DbDataMapper = DbDataMapper()) : ForecastDataSource {
+class ForecastDb(private val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.instance,
+                 private val dataMapper: DbDataMapper = DbDataMapper()) : ForecastDataSource {
 
 
     override fun requestForecastByZipCode(zipCode: Long, date: Long): ForecastList? = forecastDbHelper.use {
         val dailyRequest = "${DayForecastTable.CITY_ID} = ? " + "AND ${DayForecastTable.DATE} >= ?"
-        val dailyForecast = select(DayForecastTable.NAME).whereArgs(dailyRequest, "id" to zipCode, "date" to date)
+        val dailyForecast = select(DayForecastTable.NAME)
+                .whereSimple(dailyRequest, zipCode.toString(), date.toString())
                 .parseList { DayForecast(HashMap(it)) }
 
         val city = select(CityForecastTable.NAME)
-                .whereSimple("${CityForecastTable.ID} = ? ", zipCode.toString())
+                .whereSimple("${CityForecastTable.ID} = ?", zipCode.toString())
                 .parseOpt { CityForecast(HashMap(it), dailyForecast) }
 
         city?.let {
-            dataMapper.convertToDomain(city)
+            dataMapper.convertToDomain(it)
         }
     }
 

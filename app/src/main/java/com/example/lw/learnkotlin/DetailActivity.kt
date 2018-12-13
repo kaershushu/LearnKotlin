@@ -8,7 +8,6 @@ import com.example.lw.learnkotlin.domin.model.Forecast
 import com.example.lw.learnkotlin.request.RequestDayForecastCommand
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
-import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
 import org.jetbrains.anko.textColor
@@ -28,24 +27,21 @@ class DetailActivity : AppCompatActivity(), ToolbarManager {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        initToolbar()
+        enableHomeUp { onBackPressed() }
         val title = intent.getStringExtra(CITY_NAME)
         val id = intent.getLongExtra(CITY_ID, 0)
         doAsync {
-            val result = bg{RequestDayForecastCommand(id).execute()}
-            with(RequestDayForecastCommand(id).execute()) {
-                uiThread {
-
-                }
+            val result = RequestDayForecastCommand(id).execute()
+            uiThread {
+                bindForecast(result)
             }
-            bindForecast(result.await())
         }
-        initToolbar()
         toolbarTitle = title
-        enableHomeUp { onBackPressed() }
     }
 
     private fun bindForecast(forecast: Forecast) {
-        supportActionBar!!.subtitle = forecast.date.toDateString(DateFormat.FULL)
+        toolbar.subtitle = forecast.date.toDateString(DateFormat.FULL)
         bindWeather(forecast.high to maxTemperature, forecast.low to minTemperature)
         tvweatherdescription.text = forecast.description
         Picasso.get().load(forecast.iconUrl).into(icon)

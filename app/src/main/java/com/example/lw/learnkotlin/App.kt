@@ -22,6 +22,4 @@ class App : Application() {
         Stetho.initializeWithDefaults(instance)
         Logger.addLogAdapter(AndroidLogAdapter())
     }
-
-
 }

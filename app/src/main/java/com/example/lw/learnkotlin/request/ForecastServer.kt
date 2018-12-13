@@ -14,7 +14,8 @@ class ForecastServer(private val serverDataMapper: ServerDataMapper = ServerData
     override fun requestDayForecast(id: Long): Forecast? = throw IllegalStateException("")
 
     override fun requestForecastByZipCode(zipCode: Long, date: Long): ForecastList? = with(ForecastServerRequest(zipCode, Gson()).request()) {
-        db.saveForecast(serverDataMapper.convertToDomain(zipCode,this))
-        serverDataMapper.convertToDomain(zipCode, this)
+        val forecastList = serverDataMapper.convertToDomain(zipCode,this)
+        db.saveForecast(forecastList)
+        forecastList
     }
 }

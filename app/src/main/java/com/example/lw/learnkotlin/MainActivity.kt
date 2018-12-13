@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
             val result = RequestForecastCommand(94043, ForecastProvider()).execute()
             uiThread {
                 val adapter = ForecastListAdapter(result) {
-                    startActivity<DetailActivity>(DetailActivity.CITY_ID to result.id, DetailActivity.CITY_NAME to result.city)
+                    startActivity<DetailActivity>(DetailActivity.CITY_ID to it.id, DetailActivity.CITY_NAME to result.city)
                 }
                 recycler.adapter = adapter
 
