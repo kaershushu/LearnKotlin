@@ -24,7 +24,7 @@ interface ToolbarManager {
         toolbar.inflateMenu(R.menu.menu_main)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.action_settings -> App.instance.toast("Settings")
+                R.id.action_settings -> toolbar.ctx.startActivity<SettingActivity>()
                 else -> App.instance.toast("Unknown option")
             }
             true

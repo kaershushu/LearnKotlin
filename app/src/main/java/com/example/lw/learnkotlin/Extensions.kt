@@ -37,6 +37,8 @@ private class NotNullSingleValueVar<T : Any> : ReadWriteProperty<Any?, T> {
 
 object DelegatesExt {
     fun <T : Any> notNullSingleValue(): ReadWriteProperty<Any?, T> = NotNullSingleValueVar()
+
+    fun <T : Any> longPreference(context: Context, name: String, default: T) = LongPreference(context, name, default)
 }
 
 //数据库里各个元素的object
@@ -91,18 +93,56 @@ fun Long.toDateString(dateFormat: Int = DateFormat.MEDIUM): String {
 
 fun Context.color(res: Int) = ContextCompat.getColor(this, res)
 
-inline fun <reified T:Activity>Context.startActivity(vararg params: Pair<String, String>) {
+inline fun <reified T : Activity> Context.startActivity(vararg params: Pair<String, String>) {
     val intent = Intent(this, T::class.java)
-    params.forEach{
+    params.forEach {
         intent.putExtra(it.first, it.second)
     }
     startActivity(intent)
 }
 
-fun View.slideExit(){
+fun View.slideExit() {
     if (translationY == 0f) animate().translationY(-height.toFloat())
 }
 
-fun View.slideEnter(){
+fun View.slideEnter() {
     if (translationY < 0f) animate().translationY(0f)
+}
+
+// 新的SharedPreference委托
+class LongPreference<T>(private val ctx: Context, val name: String, val default: T) : ReadWriteProperty<Any?, T> {
+    private val pref by lazy {
+        ctx.getSharedPreferences("default", Context.MODE_PRIVATE)
+    }
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        return findPreference(name, default)
+    }
+
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        putPreference(name, value)
+    }
+
+    private fun <T> findPreference(name: String, default: T): T = with(pref) {
+        val res: Any = when (default) {
+            is Long -> getLong(name, default)
+            is Int -> getInt(name, default)
+            is String -> getString(name, default)
+            is Float -> getFloat(name, default)
+            is Boolean -> getBoolean(name, default)
+            else -> throw IllegalArgumentException("This type can not be saved int preference")
+        }
+        res as T
+    }
+
+    private fun <T> putPreference(name: String, value: T) = with(pref.edit()) {
+        when (value) {
+            is Long -> putLong(name, value)
+            is Int -> putInt(name, value)
+            is String -> putString(name, value)
+            is Float -> putFloat(name, value)
+            is Boolean -> putBoolean(name, value)
+            else -> throw IllegalArgumentException("This type can not be saved int preference")
+        }.apply()
+    }
 }

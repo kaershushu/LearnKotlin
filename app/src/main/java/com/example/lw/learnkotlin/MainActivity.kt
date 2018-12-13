@@ -1,6 +1,7 @@
 package com.example.lw.learnkotlin
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,15 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lw.learnkotlin.request.ForecastProvider
 import com.example.lw.learnkotlin.request.RequestForecastCommand
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.doAsyncResult
-import org.jetbrains.anko.find
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity(), ToolbarManager {
     override val toolbar by lazy {
         find<Toolbar>(R.id.toolbar)
     }
+
+    val zipCode: Long by DelegatesExt.longPreference(this, SettingActivity.ZIP_CODE, SettingActivity.DEFAULT_ZIP)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
         forecastList.layoutManager = LinearLayoutManager(this@MainActivity)
 
         doAsyncResult {
-            val result = RequestForecastCommand(94043, ForecastProvider()).execute()
+            val result = RequestForecastCommand(zipCode, ForecastProvider()).execute()
             uiThread {
                 val adapter = ForecastListAdapter(result) {
                     startActivity<DetailActivity>(DetailActivity.CITY_ID to it.id, DetailActivity.CITY_NAME to result.city)
@@ -35,11 +35,19 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
                 recycler.adapter = adapter
 
                 initToolbar()
-                toolbarTitle = result.city
+                toolbarTitle = "${result.city} (${result.city})"
                 attachToScroll(recycler)
             }
         }
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.action_settings -> toolbar.ctx.startActivity<SettingActivity>()
+            else -> App.instance.toast("Unknown option")
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

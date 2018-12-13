@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SettingActivity">
+
+    <include layout="@layout/layout_toolbar" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:gravity="left|start"
+        android:text="@string/hint_citycode"
+        android:textColor="@color/colorAccent" />
+
+    <EditText
+        android:id="@+id/et_city_code"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_citycode" />
+
+</LinearLayout>
