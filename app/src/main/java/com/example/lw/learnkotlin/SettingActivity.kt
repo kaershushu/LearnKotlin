@@ -39,5 +39,6 @@ class SettingActivity : AppCompatActivity(), ToolbarManager {
     override fun onBackPressed() {
         super.onBackPressed()
         zipCode = et_city_code.text.toString().toLong()
+
     }
 }
