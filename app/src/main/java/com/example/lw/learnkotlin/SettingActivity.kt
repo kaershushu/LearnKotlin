@@ -40,7 +40,7 @@ class SettingActivity : AppCompatActivity(), ToolbarManager {
         try {
             zipCode = et_city_code.text.toString().toLong()
         }catch (e : NumberFormatException){
-            App.instance.toast("老铁，这个不能转成Long")
+            App.instance.toast("老铁，这个类型不能转成Long")
         }
     }
 }
