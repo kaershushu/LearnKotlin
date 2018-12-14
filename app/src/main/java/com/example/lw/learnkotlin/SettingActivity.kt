@@ -1,11 +1,13 @@
 package com.example.lw.learnkotlin
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.activity_setting.*
 import org.jetbrains.anko.find
+import org.jetbrains.anko.toast
 
 class SettingActivity : AppCompatActivity(), ToolbarManager {
     override val toolbar: Toolbar
@@ -16,17 +18,14 @@ class SettingActivity : AppCompatActivity(), ToolbarManager {
         const val DEFAULT_ZIP = 94043L
     }
 
-    var zipCode: Long by DelegatesExt.longPreference(this, SettingActivity.ZIP_CODE, SettingActivity.DEFAULT_ZIP)
+    private var zipCode: Long by DelegatesExt.longPreference(this, SettingActivity.ZIP_CODE, SettingActivity.DEFAULT_ZIP)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
+        et_city_code.text = Editable.Factory.getInstance().newEditable("$zipCode")
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -38,7 +37,10 @@ class SettingActivity : AppCompatActivity(), ToolbarManager {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        zipCode = et_city_code.text.toString().toLong()
-
+        try {
+            zipCode = et_city_code.text.toString().toLong()
+        }catch (e : NumberFormatException){
+            App.instance.toast("老铁，这个不能转成Long")
+        }
     }
 }
