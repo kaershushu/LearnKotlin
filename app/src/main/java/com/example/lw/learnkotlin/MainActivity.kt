@@ -7,7 +7,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lw.learnkotlin.request.ForecastProvider
-import com.example.lw.learnkotlin.request.RequestForecastCommand
+import com.example.lw.learnkotlin.request.ForecastRequest
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.*
 
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(), ToolbarManager {
         forecastList.layoutManager = LinearLayoutManager(this@MainActivity)
 
         doAsyncResult {
-            val result = RequestForecastCommand(zipCode, ForecastProvider()).execute()
+            val result = ForecastRequest(zipCode, ForecastProvider()).execute()
             uiThread {
                 val adapter = ForecastListAdapter(result) {
                     startActivity<DetailActivity>(DetailActivity.CITY_ID to it.id, DetailActivity.CITY_NAME to result.city)
